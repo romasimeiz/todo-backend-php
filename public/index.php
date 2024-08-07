@@ -8,6 +8,13 @@ $requestUri = $_SERVER['REQUEST_URI'];
 $uriSegments = explode('/', trim(parse_url($requestUri, PHP_URL_PATH), '/'));
 $todoController = new TodoController($pdo);
 
+setCors();
+    
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
 if (count($uriSegments) < 2 || $uriSegments[0] !== 'api' || $uriSegments[1] !== 'todos') {
     http_response_code(404);
     echo json_encode(['status' => 'failed', 'message' => 'Not Found']);

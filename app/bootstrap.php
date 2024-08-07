@@ -8,6 +8,20 @@
     $db =   $_ENV['DB_NAME'];
     $user = $_ENV['DB_USER'];
     $pass = $_ENV['DB_PASS'];
+
+    function setCors() {
+        $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+        if ($origin === 'http://localhost:3000') {
+            header('Access-Control-Allow-Origin: http://localhost:3000');
+            header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
+            header('Access-Control-Allow-Headers: Content-Type, Authorization');
+            header('Access-Control-Allow-Credentials: true');
+        } else {
+            http_response_code(403);
+            echo json_encode(['message' => 'Forbidden']);
+            exit;
+        }
+    }
     
     $dsn = "mysql:host=$host;charset=utf8";
 
@@ -28,7 +42,8 @@
             CREATE TABLE IF NOT EXISTS todos (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 title VARCHAR(255) NOT NULL,
-                description VARCHAR(255) NOT NULL
+                description VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )";
         $pdo->exec($createTableQuery);
     } catch (PDOException $e) {

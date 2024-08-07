@@ -8,7 +8,7 @@ class TodoController {
 
     public function getTodos() {
         try {
-            $query = $this->pdo->query('SELECT * FROM todos');
+            $query = $this->pdo->query('SELECT * FROM todos ORDER BY created_at');
             $todos = $query->fetchAll();
             http_response_code(200);
             echo json_encode(['status' => 'success', 'data' => ['todos' => $todos] ]);
